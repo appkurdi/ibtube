@@ -1,0 +1,32 @@
+name: Deploy Flutter Web to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: دابەزاندنی کۆدەکان لە گیتهاب
+        uses: actions/checkout@v3
+
+      - name: ئامادەکردنی فلەتەر
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: دابەزاندنی پاکێجەکان
+        run: flutter pub get
+
+      - name: دروستکردنی وێب ئەپڵیکەیشن
+        # لێرەدا ناوی ڕیپۆزیتۆرییەکەت (Ibtube) جێگیر کراوە
+        run: flutter build web --release --base-href /Ibtube/
+
+      - name: بڵاوکردنەوەی لەسەر GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
