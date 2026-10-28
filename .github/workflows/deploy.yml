@@ -18,12 +18,14 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: دروستکردنی فۆڵدەری وێب (چارەسەر)
+        run: flutter create . --platforms web
+
       - name: دابەزاندنی پاکێجەکان
         run: flutter pub get
 
       - name: دروستکردنی وێب ئەپڵیکەیشن
-        # لێرەدا ناوی ڕیپۆزیتۆرییەکەت (Ibtube) جێگیر کراوە
-        run: flutter build web --release --base-href /Ibtube/
+        run: flutter build web --release --base-href /ibtube/
 
       - name: بڵاوکردنەوەی لەسەر GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
