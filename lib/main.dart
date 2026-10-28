@@ -109,12 +109,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
       _statusText = "⚙️ هێنانی ڤیدیۆکە لە تۆڕە کۆمەڵایەتییەکە...";
     });
 
-    const targetApi = "https://api.cobalt.tools/api/json";
-    final proxyUrl = Uri.parse("https://corsproxy.io/?${Uri.encodeComponent(targetApi)}");
+    // لابردنی پڕۆکسی چونکە سێرڤەری کۆباڵت ئێستا ڕاستەوخۆ پشتگیری وێبگەڕ دەکات
+    final targetApi = Uri.parse("https://api.cobalt.tools/api/json");
 
     try {
       final response = await http.post(
-        proxyUrl,
+        targetApi,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -138,6 +138,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
           });
           await _launchDownload(data['url']);
         }
+      } else if (response.statusCode == 429) {
+        setState(() {
+          _statusText = "❌ سێرڤەر قەرەباڵغە، تکایە کەمێکی تر هەوڵ بدەرەوە.";
+        });
       } else {
         setState(() {
           _statusText = "❌ نەتوانرا پەیوەندی بە سێرڤەری شیکارکەرەوە بکرێت.";
@@ -145,7 +149,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       }
     } catch (e) {
       setState(() {
-        _statusText = "❌ کێشەی هێڵی ئینتەرنێت هەیە.";
+        _statusText = "❌ کێشەی هێڵی ئینتەرنێت هەیە یان وێبگەڕەکەت ڕێگری دەکات.";
       });
     }
   }
