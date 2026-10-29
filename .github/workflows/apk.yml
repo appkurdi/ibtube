@@ -1,0 +1,38 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # ئەمە ڕێگەت پێدەدات بە دەستی خۆتیش ئیشی پێ بکەیت
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: دابەزاندنی کۆدەکان لە گیتهاب
+        uses: actions/checkout@v3
+
+      - name: ئامادەکردنی ژینگەی جاڤا بۆ ئەندرۆید
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: ئامادەکردنی فلەتەر
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: دابەزاندنی پاکێجەکان
+        run: flutter pub get
+
+      - name: دروستکردنی فایلی ئەپڵیکەیشن (APK)
+        run: flutter build apk --release
+
+      - name: بەرزکردنەوەی APK بۆ ئەوەی بتوانیت دایبەزێنیت
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ibtube-App-Release
+          path: build/app/outputs/flutter-apk/app-release.apk
