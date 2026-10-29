@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # ئەمە ڕێگەت پێدەدات بە دەستی خۆتیش ئیشی پێ بکەیت
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,6 +24,9 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: دروستکردنی فۆڵدەری ئەندرۆید (چارەسەری کێشەکە)
+        run: flutter create . --platforms android
 
       - name: دابەزاندنی پاکێجەکان
         run: flutter pub get
