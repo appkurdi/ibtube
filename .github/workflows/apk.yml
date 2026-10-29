@@ -25,8 +25,12 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: دروستکردنی فۆڵدەری ئەندرۆید (چارەسەری کێشەکە)
+      - name: دروستکردنی فۆڵدەری ئەندرۆید
         run: flutter create . --platforms android
+
+      - name: زیادکردنی مۆڵەتی ئینتەرنێت بۆ ئەپەکە (چارەسەر)
+        run: |
+          sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"/>' android/app/src/main/AndroidManifest.xml
 
       - name: دابەزاندنی پاکێجەکان
         run: flutter pub get
