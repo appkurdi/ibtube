@@ -41,13 +41,26 @@ class _DownloadScreenState extends State<DownloadScreen> {
   final YoutubeExplode _yt = YoutubeExplode();
 
   Future<void> _processUrl() async {
-    final url = _urlController.text.trim();
+    String url = _urlController.text.trim();
     if (url.isEmpty) return;
 
     setState(() {
       _isLoading = true;
       _statusText = "⏳ شیکردنەوەی لینکەکە...";
     });
+
+    // --- ڕاستکەرەوەی ئۆتۆماتیکی لینک (Smart URL Fixer) ---
+    // ئەگەر بەکارهێنەر لە کاتی کۆپیکردندا پیتەکانی سەرەتای جێهێشتبوو، ئەپەکە خۆی چاکی دەکات
+    if (url.startsWith('ttps://')) {
+      url = url.replaceFirst('ttps://', 'https://');
+    } else if (url.startsWith('tps://')) {
+      url = url.replaceFirst('tps://', 'https://');
+    } else if (url.startsWith('ps://')) {
+      url = url.replaceFirst('ps://', 'https://');
+    } else if (!url.startsWith('http')) {
+      url = 'https://$url';
+    }
+    // --------------------------------------------------------
 
     final lowerUrl = url.toLowerCase();
 
@@ -109,7 +122,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
       _statusText = "⚙️ هێنانی ڤیدیۆکە لە تۆڕە کۆمەڵایەتییەکە...";
     });
 
-    // لابردنی پڕۆکسی چونکە سێرڤەری کۆباڵت ئێستا ڕاستەوخۆ پشتگیری وێبگەڕ دەکات
     final targetApi = Uri.parse("https://api.cobalt.tools/api/json");
 
     try {
